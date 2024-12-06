@@ -9,7 +9,7 @@ An attacker might make the `PuppyRaffle::players` array so big, that no noe else
 **Proof of Concept:**
 100 player's gas cost is higher than 10 players 30x
 ```
-// @audit Dos
+// @audit DoS
 @>    function testDOS() public{
         vm.txGasPrice(1);
 
