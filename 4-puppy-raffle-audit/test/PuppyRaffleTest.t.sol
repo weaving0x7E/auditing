@@ -263,6 +263,19 @@ contract PuppyRaffleTest is Test {
         console.log("ending attacker contract balance: ", address(attackerContract).balance);
         console.log("ending contract balance: ", address(puppyRaffle).balance);
     }
+
+
+    function test_IntegerOverflow() public {
+        puppyRaffle.enterRaffle{value: entranceFee * 100}(produceAddress(100,0));
+
+        vm.warp(block.timestamp + duration + 1);
+        vm.roll(block.number + 1);
+
+        uint256 expectedPayout = ((entranceFee * 100) * 20 / 100);
+
+        puppyRaffle.selectWinner();
+        puppyRaffle.withdrawFees();
+    }
 }
 
 contract ReentrancyAttacker {
