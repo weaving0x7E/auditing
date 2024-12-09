@@ -37,3 +37,4 @@ An attacker might make the `PuppyRaffle::players` array so big, that no noe else
 ```
 
 **Recommended Mitigation:** 
+Consider allowing duplicate. User can make new wallet addresses anyways, so a duplicate check doesn't prevent the same person from entering multiple times, only the same wallet address.
