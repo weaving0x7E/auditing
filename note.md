@@ -1,4 +1,5 @@
 ## Before Audit
+* reading document 
 * cloc
 * solidity metrics
 
