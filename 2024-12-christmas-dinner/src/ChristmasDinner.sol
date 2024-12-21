@@ -207,7 +207,6 @@ contract ChristmasDinner {
      * with their balances and participation status.
      */
     receive() external payable {
-        //@audit 把所有ERC20 按数量加起来而不是按照换算成usd后的价格？
         etherBalance[msg.sender] += msg.value;
         emit NewSignup(msg.sender, msg.value, true);
     }

