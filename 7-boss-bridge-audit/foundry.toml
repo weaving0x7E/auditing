@@ -19,3 +19,12 @@ number_underscore = "thousands"
 quote_style = "double"
 tab_width = 4
 wrap_comments = true
+
+[fuzz]
+runs = 1000
+seed = '0x2'
+
+[invariant]
+runs = 256
+depth = 32
+fail_on_revert = true
