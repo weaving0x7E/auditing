@@ -41,6 +41,7 @@ contract Handler is Test{
 
     function withdraw(uint256 amount) public{
         amount = bound(amount, 0, 100 ether);
+        bossBridge.depositTokensToL2(user0, user1, amount);
         (uint8 v, bytes32 r, bytes32 s) = _signMessage(_getTokenWithdrawalMessage(user0,amount), operatorKey);
         bossBridge.withdrawTokensToL1(user0, amount, v, r, s);
     }
