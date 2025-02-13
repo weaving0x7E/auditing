@@ -80,7 +80,7 @@ contract VaultShares is ERC4626, IVaultShares, AaveAdapter, UniswapAdapter, Reen
         _;
 
         // Reinvest
-        // q 假如这个时候让s_isActive = false呢？
+        // q: 假如这个时候让s_isActive = false呢？
         if (s_isActive) {
             _investFunds(IERC20(asset()).balanceOf(address(this)));
         }
@@ -122,6 +122,7 @@ contract VaultShares is ERC4626, IVaultShares, AaveAdapter, UniswapAdapter, Reen
      * @notice Allows Vault Guardians to update their allocation ratio (and thus, their strategy of investment)
      * @param tokenAllocationData The new allocation data
      */
+    // q: 改变仓位状态为什么不和真正的操作放在一起？
     function updateHoldingAllocation(AllocationData memory tokenAllocationData) public onlyVaultGuardians isActive {
         uint256 totalAllocation = tokenAllocationData.holdAllocation + tokenAllocationData.uniswapAllocation
             + tokenAllocationData.aaveAllocation;

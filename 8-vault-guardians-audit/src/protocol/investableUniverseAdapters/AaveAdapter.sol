@@ -26,6 +26,7 @@ contract AaveAdapter {
         if (!succ) {
             revert AaveAdapter__TransferFailed();
         }
+        // q referralCode一直是0？？
         i_aavePool.supply({
             asset: address(asset),
             amount: amount,

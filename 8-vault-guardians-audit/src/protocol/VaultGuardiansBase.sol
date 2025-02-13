@@ -138,6 +138,8 @@ contract VaultGuardiansBase is AStaticTokenData, IVaultData {
         return _becomeTokenGuardian(i_weth, wethVault);
     }
 
+// WETH vault guardian 才能成为其他token的guardian，也就是存在WETH、USDC、LINK三种vaultShare
+
     /**
      * @notice Allows anyone to become a vault guardian for any one of the other supported tokens (USDC, LINK)
      * @notice However, only WETH vault guardians can become vault guardians for other tokens
@@ -242,6 +244,7 @@ contract VaultGuardiansBase is AStaticTokenData, IVaultData {
         emit GaurdianRemoved(msg.sender, token);
         tokenVault.setNotActive();
         uint256 maxRedeemable = tokenVault.maxRedeem(msg.sender);
+// q redeem 出的token怎么还给user？
         uint256 numberOfAssetsReturned = tokenVault.redeem(maxRedeemable, msg.sender, msg.sender);
         return numberOfAssetsReturned;
     }

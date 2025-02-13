@@ -116,6 +116,7 @@ contract VaultSharesTest is Base_Test {
         assert(wethVaultShares.balanceOf(user) > 0);
     }
 
+    
     function testUserDepositsFundsAndDaoAndGuardianGetShares() public hasGuardian {
         uint256 startingGuardianBalance = wethVaultShares.balanceOf(guardian);
         uint256 startingDaoBalance = wethVaultShares.balanceOf(address(vaultGuardians));
@@ -177,5 +178,19 @@ contract VaultSharesTest is Base_Test {
 
         assert(weth.balanceOf(user) > startingBalance);
         assertEq(wethVaultShares.balanceOf(user), startingSharesBalance - amoutToRedeem);
+    }
+
+    function testUserDepositsFundsAndDaoAndUpdateGuardianGetShares() public hasGuardian {
+        uint256 startingGuardianBalance = wethVaultShares.balanceOf(guardian);
+        uint256 startingDaoBalance = wethVaultShares.balanceOf(address(vaultGuardians));
+
+        weth.mint(mintAmount, user);
+        vm.startPrank(user);
+        console.log(wethVaultShares.totalSupply());
+        weth.approve(address(wethVaultShares), mintAmount);
+        wethVaultShares.deposit(mintAmount, user);
+
+        assert(wethVaultShares.balanceOf(guardian) > startingGuardianBalance);
+        assert(wethVaultShares.balanceOf(address(vaultGuardians)) > startingDaoBalance);
     }
 }
